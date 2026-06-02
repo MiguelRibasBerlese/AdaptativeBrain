@@ -1,0 +1,13 @@
+{
+  "baseFontSize": 16,
+  "baseFontSizeAction": true,
+  "textFontFamily": "",
+  "monospaceFontFamily": "",
+  "interfaceFontFamily": "",
+  "accentColor": "#9d6eff",
+  "theme": "obsidian",
+  "cssTheme": "Black",
+  "enabledCssSnippets": [],
+  "translucency": false,
+  "nativeMenus": false
+}

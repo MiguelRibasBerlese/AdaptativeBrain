@@ -1,0 +1,347 @@
+/* ============================================================
+   BLACK — by b3h3m0th
+   Original: github.com/b3h3m0th/black-obsidian-theme
+   Modified: minimal purple accents
+   ============================================================ */
+
+.theme-dark {
+  /* ── ORIGINAL THEME ────────────────────────────────────── */
+  --background-primary:           #000000;
+  --background-secondary:         #000000;
+  --titlebar-background-focused:  #000000;
+
+  /* ── PURPLE ACCENT SCALE ───────────────────────────────── */
+  --purple:           #9d6eff;
+  --purple-dim:       rgba(157, 110, 255, 0.18);
+  --purple-border:    rgba(157, 110, 255, 0.28);
+  --purple-glow:      rgba(157, 110, 255, 0.08);
+
+  /* ── OVERRIDES ─────────────────────────────────────────── */
+  --background-primary-alt:             #050505;
+  --background-secondary-alt:           #080808;
+  --background-modifier-border:         #111111;
+  --background-modifier-form-field:     #0a0a0a;
+  --background-modifier-hover:          #0d0d0d;
+
+  --text-normal:    #d4d4d4;
+  --text-muted:     #555555;
+  --text-faint:     #333333;
+  --text-on-accent: #ffffff;
+  --text-selection: rgba(157, 110, 255, 0.2);
+
+  /* Links → purple */
+  --link-color:              #9d6eff;
+  --link-color-hover:        #bb99ff;
+  --link-unresolved-color:   rgba(157, 110, 255, 0.4);
+  --link-external-color:     #7b6fff;
+  --link-external-color-hover: #a090ff;
+
+  /* Interactive → purple */
+  --interactive-accent:       #9d6eff;
+  --interactive-accent-hover: #bb99ff;
+  --interactive-normal:       #0d0d0d;
+  --interactive-hover:        #111111;
+
+  /* Accent global (checkboxes, toggles, etc.) */
+  --color-accent:     #9d6eff;
+  --color-accent-hsl: 261, 100%, 72%;
+  --color-accent-1:   #bb99ff;
+  --color-accent-2:   #7c4dff;
+
+  /* Headings — branco com H1 levemente roxo */
+  --h1-color: #c4a8ff;
+  --h2-color: #d4d4d4;
+  --h3-color: #d4d4d4;
+  --h4-color: #d4d4d4;
+  --h5-color: #999999;
+  --h6-color: #666666;
+
+  /* Code */
+  --code-background:  #050505;
+  --code-normal:      #c8c8c8;
+  --code-function:    #bb99ff;
+  --code-keyword:     #9d6eff;
+  --code-string:      #88cc88;
+  --code-comment:     #444444;
+  --code-operator:    #aaaaaa;
+
+  /* Tags */
+  --tag-color:            #9d6eff;
+  --tag-background:       rgba(157, 110, 255, 0.1);
+  --tag-background-hover: rgba(157, 110, 255, 0.2);
+  --tag-border-color:     rgba(157, 110, 255, 0.25);
+  --tag-border-width:     1px;
+  --tag-padding-x:        8px;
+  --tag-padding-y:        2px;
+  --tag-radius:           9999px;
+
+  /* Indentation */
+  --indentation-guide-color:        rgba(157, 110, 255, 0.12);
+  --indentation-guide-color-active: rgba(157, 110, 255, 0.35);
+
+  /* Scrollbar */
+  --scrollbar-bg:              transparent;
+  --scrollbar-thumb-bg:        rgba(157, 110, 255, 0.18);
+  --scrollbar-active-thumb-bg: rgba(157, 110, 255, 0.4);
+
+  /* Radius */
+  --radius-s:  3px;
+  --radius-m:  6px;
+  --radius-l:  10px;
+
+  /* Font */
+  --font-text-size:    16px;
+  --line-height-normal: 1.75;
+  --font-monospace: 'Cascadia Code', 'Consolas', 'JetBrains Mono', monospace;
+}
+
+/* ── CURSOR ─────────────────────────────────────────────────── */
+.cm-cursor {
+  border-left: 2px solid #9d6eff !important;
+}
+
+/* ── ACTIVE LINE ─────────────────────────────────────────────── */
+.cm-active.cm-line {
+  background: rgba(157, 110, 255, 0.03) !important;
+}
+
+/* ── SELECTION ───────────────────────────────────────────────── */
+.cm-selectionBackground, ::selection {
+  background: rgba(157, 110, 255, 0.18) !important;
+}
+
+/* ── H1 — única heading com detalhe roxo ────────────────────── */
+.markdown-rendered h1,
+.HyperMD-header-1 .cm-header-1 {
+  color: #c4a8ff;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid rgba(157, 110, 255, 0.2);
+}
+
+.HyperMD-header-1 {
+  border-bottom: none;
+}
+
+/* ── LINKS ───────────────────────────────────────────────────── */
+a.internal-link,
+.cm-hmd-internal-link {
+  color: #9d6eff !important;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(157, 110, 255, 0.25);
+  transition: color 0.12s, border-color 0.12s;
+}
+a.internal-link:hover,
+.cm-hmd-internal-link:hover {
+  color: #bb99ff !important;
+  border-bottom-color: rgba(187, 153, 255, 0.5);
+}
+.cm-url { color: #7b6fff !important; }
+
+/* ── INLINE CODE ─────────────────────────────────────────────── */
+code,
+.cm-inline-code {
+  background: #0a0a0a !important;
+  color: #bb99ff !important;
+  border: 1px solid rgba(157, 110, 255, 0.2) !important;
+  border-radius: 3px !important;
+  padding: 0.1em 0.35em !important;
+  font-family: var(--font-monospace);
+  font-size: 0.875em !important;
+}
+
+pre code, .HyperMD-codeblock .cm-line {
+  background: transparent !important;
+  border: none !important;
+  color: #c8c8c8 !important;
+  padding: 0 !important;
+}
+
+/* ── CODE BLOCK ──────────────────────────────────────────────── */
+pre,
+.markdown-rendered pre {
+  background: #050505 !important;
+  border: 1px solid #111 !important;
+  border-left: 2px solid rgba(157, 110, 255, 0.4) !important;
+  border-radius: var(--radius-m) !important;
+  padding: 1em 1.2em !important;
+  font-family: var(--font-monospace);
+  font-size: 0.875em !important;
+}
+
+/* ── BLOCKQUOTE ──────────────────────────────────────────────── */
+.markdown-rendered blockquote {
+  background: rgba(157, 110, 255, 0.04);
+  border-left: 2px solid rgba(157, 110, 255, 0.45);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  padding: 0.6em 1em;
+  margin: 1em 0;
+  color: #999;
+}
+
+/* ── HR ──────────────────────────────────────────────────────── */
+.markdown-rendered hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(157, 110, 255, 0.35),
+    transparent
+  );
+  margin: 1.8em 0;
+}
+
+/* ── TABLES ──────────────────────────────────────────────────── */
+.markdown-rendered table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #111;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+}
+.markdown-rendered th {
+  background: #080808;
+  color: #9d6eff;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(157, 110, 255, 0.2);
+}
+.markdown-rendered td {
+  padding: 7px 14px;
+  border-bottom: 1px solid #0d0d0d;
+  color: #c8c8c8;
+}
+.markdown-rendered tr:hover td { background: rgba(157, 110, 255, 0.03); }
+.markdown-rendered tr:last-child td { border-bottom: none; }
+
+/* ── TAGS ────────────────────────────────────────────────────── */
+.tag {
+  background: rgba(157, 110, 255, 0.1) !important;
+  border: 1px solid rgba(157, 110, 255, 0.25) !important;
+  color: #9d6eff !important;
+  border-radius: 9999px !important;
+  padding: 1px 9px !important;
+  font-size: 0.78em !important;
+  text-decoration: none !important;
+  transition: all 0.12s;
+}
+.tag:hover {
+  background: rgba(157, 110, 255, 0.18) !important;
+  color: #bb99ff !important;
+}
+
+/* ── CHECKBOXES ──────────────────────────────────────────────── */
+.task-list-item-checkbox {
+  accent-color: #9d6eff;
+}
+.task-list-item.is-checked {
+  color: #444;
+  text-decoration: line-through;
+  text-decoration-color: rgba(157, 110, 255, 0.3);
+}
+
+/* ── FILE EXPLORER ───────────────────────────────────────────── */
+.nav-file-title.is-active {
+  color: #9d6eff !important;
+  background: rgba(157, 110, 255, 0.07) !important;
+  border-left: 2px solid rgba(157, 110, 255, 0.5) !important;
+}
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  color: #9d6eff !important;
+  background: rgba(157, 110, 255, 0.05) !important;
+}
+.nav-folder-collapse-indicator { color: #222 !important; }
+
+/* ── COMMAND PALETTE ─────────────────────────────────────────── */
+.suggestion-item.is-selected {
+  background: rgba(157, 110, 255, 0.12) !important;
+  color: #bb99ff !important;
+}
+.suggestion-highlight {
+  color: #9d6eff !important;
+  font-weight: 600;
+}
+.prompt-input { caret-color: #9d6eff !important; }
+
+/* ── INTERACTIVE / BUTTONS ───────────────────────────────────── */
+.mod-cta {
+  background: #9d6eff !important;
+  color: #fff !important;
+  border-radius: var(--radius-m) !important;
+}
+.mod-cta:hover {
+  background: #7c4dff !important;
+  box-shadow: 0 0 10px rgba(157, 110, 255, 0.3) !important;
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────── */
+::-webkit-scrollbar              { width: 4px; height: 4px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: rgba(157, 110, 255, 0.18); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover  { background: rgba(157, 110, 255, 0.4); }
+
+/* ── MODAL & TOOLTIP ─────────────────────────────────────────── */
+.modal-container .modal {
+  background: #050505 !important;
+  border: 1px solid #1a1a1a !important;
+  border-radius: var(--radius-l) !important;
+}
+.tooltip {
+  background: #0a0a0a !important;
+  border: 1px solid #1a1a1a !important;
+  color: #aaaaaa !important;
+  font-size: 11px !important;
+}
+
+/* ── STATUS BAR ──────────────────────────────────────────────── */
+.status-bar {
+  background: #000 !important;
+  border-top: 1px solid #0d0d0d !important;
+  color: #333 !important;
+}
+.status-bar-item:hover { color: #9d6eff !important; }
+
+/* ── RIBBON ──────────────────────────────────────────────────── */
+.side-dock-ribbon {
+  background: #000 !important;
+  border-right: 1px solid #0d0d0d !important;
+}
+.side-dock-ribbon-action:hover { color: #9d6eff !important; }
+.side-dock-ribbon-action.is-active { color: #9d6eff !important; }
+
+/* ── GRAPH VIEW ──────────────────────────────────────────────── */
+.graph-view.color-fill         { color: #9d6eff; }
+.graph-view.color-fill-focused { color: #bb99ff; }
+.graph-view.color-fill-tag     { color: #7c4dff; }
+.graph-view.color-arrow        { color: rgba(157, 110, 255, 0.25); }
+.graph-view.color-line         { color: #111111; }
+
+/* ── FRONTMATTER ─────────────────────────────────────────────── */
+.metadata-container {
+  background: #030303 !important;
+  border: 1px solid #111 !important;
+  border-radius: var(--radius-m) !important;
+}
+.metadata-property-key {
+  color: rgba(157, 110, 255, 0.6) !important;
+  font-size: 0.78em !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ── TAB ACTIVE ──────────────────────────────────────────────── */
+.workspace-tab-header.is-active {
+  border-top: 1px solid rgba(157, 110, 255, 0.4) !important;
+}
+
+/* ── SEARCH HIGHLIGHT ────────────────────────────────────────── */
+.search-result-file-match {
+  background: rgba(157, 110, 255, 0.12) !important;
+}
+.search-result-file-title { color: #9d6eff !important; }
