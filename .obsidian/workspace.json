@@ -224,6 +224,8 @@
   },
   "active": "78fe211d9520c118",
   "lastOpenFiles": [
+    ",",
+    "({,",
     "02-Conhecimento/_INDEX.md.tmp.24352.fdf7a026ecee",
     "02-Conhecimento/_INDEX.md.tmp.24352.281681c4d830",
     "02-Conhecimento/padroes/perfil-dev-senior.md",
@@ -244,8 +246,6 @@
     "02-Conhecimento/padroes/splunk.md",
     "02-Conhecimento/padroes/prometheus-grafana.md",
     "02-Conhecimento/padroes/datadog.md",
-    "02-Conhecimento/padroes/datadog.md.tmp.25316.c15131cfe7ae",
-    "02-Conhecimento/padroes/elk-stack.md.tmp.25316.dfabb251098f",
     "02-Conhecimento/padroes/observabilidade-fundamentos.md",
     "02-Conhecimento/padroes/erros-projetos-software.md",
     "99-Arquivo/README.md",
