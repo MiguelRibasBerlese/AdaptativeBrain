@@ -2,9 +2,21 @@
 type: projeto
 status: em-desenvolvimento
 projeto: crm-saas
-tags: [projeto, nestjs, nextjs, typescript, prisma, postgresql, saas, crm, monorepo, turborepo, vercel, railway]
+tags:
+  - projeto
+  - nestjs
+  - nextjs
+  - typescript
+  - prisma
+  - postgresql
+  - saas
+  - crm
+  - monorepo
+  - turborepo
+  - vercel
+  - railway
 created: 2026-05-29
-updated: 2026-05-29
+updated: 2026-06-02
 github: https://github.com/MiguelRibasBerlese/CRM-SaaS
 ---
 
