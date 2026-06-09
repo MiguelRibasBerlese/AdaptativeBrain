@@ -224,6 +224,10 @@
   },
   "active": "78fe211d9520c118",
   "lastOpenFiles": [
+    "02-Conhecimento/_INDEX.md.tmp.24352.fdf7a026ecee",
+    "02-Conhecimento/_INDEX.md.tmp.24352.281681c4d830",
+    "02-Conhecimento/padroes/perfil-dev-senior.md",
+    "02-Conhecimento/padroes/perfil-dev-senior.md.tmp.24352.01f58075405e",
     "Pesquise e sintetize um perfil completo sobre a pe.pdf",
     "Não confirmado 337389.crdownload",
     "{,",
@@ -243,10 +247,7 @@
     "02-Conhecimento/padroes/datadog.md.tmp.25316.c15131cfe7ae",
     "02-Conhecimento/padroes/elk-stack.md.tmp.25316.dfabb251098f",
     "02-Conhecimento/padroes/observabilidade-fundamentos.md",
-    "02-Conhecimento/padroes/observabilidade-fundamentos.md.tmp.25316.29f45fd1627e",
     "02-Conhecimento/padroes/erros-projetos-software.md",
-    "02-Conhecimento/padroes/estrutura-time-produto.md.tmp.21376.51d5c1b02923",
-    "02-Conhecimento/padroes/ferramentas-engenharia.md.tmp.21376.380e8f899ad9",
     "99-Arquivo/README.md",
     "01-Projetos/linka-ecosystem/README.md",
     "00-Dashboard/Home.md",
@@ -258,7 +259,6 @@
     "02-Conhecimento/padroes/validacao-pre-desenvolvimento.md",
     "02-Conhecimento/padroes/documentacao-prd-rfc-dod.md",
     "02-Conhecimento/padroes/metodologias-ageis-pratica.md",
-    "02-Conhecimento/padroes/gestao-projetos-internos.md",
-    "01-Projetos/taskflow/crm-saas-contexto.md"
+    "02-Conhecimento/padroes/gestao-projetos-internos.md"
   ]
 }

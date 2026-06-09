@@ -2,7 +2,7 @@
 type: índice
 status: active
 tags: [índice, conhecimento]
-updated: 2026-06-02
+updated: 2026-06-09
 ---
 
 # 🧩 Base de Conhecimento
@@ -52,6 +52,14 @@ updated: 2026-06-02
 | [[padroes/signoz-opentelemetry]] | SigNoz + OpenTelemetry: alternativa open-source, instrumentação OTel |
 | [[padroes/redash]] | Redash: BI/SQL dashboards, múltiplas fontes, vs Metabase vs Grafana |
 | [[padroes/observabilidade-comparacao-guia]] | Comparação geral + guia de decisão por contexto |
+
+---
+
+## 👤 Padrões — Carreira e Mentalidade
+
+| Arquivo | Tópico |
+|---------|--------|
+| [[padroes/perfil-dev-senior]] | Traços, mentalidade, soft skills, débito técnico — perfil completo do dev sênior |
 
 ---
 
