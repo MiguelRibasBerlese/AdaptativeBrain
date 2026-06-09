@@ -193,6 +193,16 @@ cd06e9e feat: filtros de status, prioridade e membro em todas as abas de tarefas
 
 ## O Que Falta Implementar
 
+### Segurança — implementado em 2026-06-09
+- [x] **Refresh token rotation** — hash bcrypt no banco, invalidado a cada uso (`User.refresh_token_hash`)
+- [x] **Redis blacklist** — access tokens revogados imediatamente no logout (`bl:{jti}` no Redis)
+- [x] **JTI em todos os tokens** — base para revogação granular
+- [x] **Swagger desabilitado em produção** — `if (NODE_ENV !== 'production')`
+- [x] **Portal creative review com slug** — `PATCH /portal/:slug/creatives/:id/review` valida ownership
+- [x] **Rate limit em `/auth/refresh`** — 10 req/min
+- [x] **nanoid para slugs de org** — substitui `Date.now()` por 8 chars aleatórios
+- [x] **uploads/ bloqueado em produção** — usar Cloudflare R2 com signed URLs
+
 ### Alta prioridade
 - [ ] **Stripe Webhook** — processar `checkout.session.completed`
 - [ ] **Convite de membro** — modal em `/team` + e-mail via Resend + link de aceite
