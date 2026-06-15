@@ -11,10 +11,14 @@
             "id": "78fe211d9520c118",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Visualização em gráfico"
+              "type": "markdown",
+              "state": {
+                "file": "02-Conhecimento/padroes/dynatrace.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "dynatrace"
             }
           }
         ]
@@ -224,6 +228,9 @@
   },
   "active": "78fe211d9520c118",
   "lastOpenFiles": [
+    "01-Projetos/taskflow/sessoes/2026-06-15.md",
+    "01-Projetos/taskflow/sessoes/2026-06-15.md.tmp.8384.ff97d6245dd7",
+    "01-Projetos/taskflow/crm-saas-contexto.md.tmp.8384.0cb81b3260ce",
     "{,-",
     "undefined)",
     "01-Projetos/taskflow/crm-saas-contexto.md.tmp.24352.3946eba0c86e",
@@ -233,9 +240,6 @@
     "02-Conhecimento/_INDEX.md.tmp.24352.281681c4d830",
     "02-Conhecimento/padroes/perfil-dev-senior.md",
     "02-Conhecimento/padroes/perfil-dev-senior.md.tmp.24352.01f58075405e",
-    "Pesquise e sintetize um perfil completo sobre a pe.pdf",
-    "Não confirmado 337389.crdownload",
-    "{,",
     "01-Projetos/taskflow/sessoes/2026-06-02.md",
     "02-Conhecimento/padroes/elk-stack.md",
     "02-Conhecimento/padroes/observabilidade-comparacao-guia.md",

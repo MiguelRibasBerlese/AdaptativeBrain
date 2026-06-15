@@ -16,7 +16,7 @@ tags:
   - vercel
   - railway
 created: 2026-05-29
-updated: 2026-06-10
+updated: 2026-06-15
 github: https://github.com/MiguelRibasBerlese/CRM-SaaS
 ---
 
@@ -28,13 +28,14 @@ github: https://github.com/MiguelRibasBerlese/CRM-SaaS
 
 ---
 
-## Status Atual (2026-05-29)
+## Status Atual (2026-06-15)
 
-- **Backend (NestJS):** ✅ Implementado — 13 módulos completos
-- **Frontend (Next.js 14):** ✅ Implementado — 10+ páginas, Kanban com DnD
-- **Deploy Web (Vercel):** 🔧 Em estabilização — múltiplos fixes de build recentes
+- **Backend (NestJS):** ✅ 18 módulos completos
+- **Frontend (Next.js 14):** ✅ 15+ páginas
+- **Deploy Web (Vercel):** ✅ Estável
 - **Deploy API (Railway):** ✅ Configurado via `railway.toml`
 - **Banco (PostgreSQL):** ✅ Prisma + migrations aplicadas
+- **Total de commits:** 118
 
 ---
 
@@ -69,47 +70,54 @@ taskflow/                 ← diretório local: C:\Users\migue\taskflow
 | Backend | NestJS, TypeScript |
 | ORM | Prisma 5 |
 | Banco | PostgreSQL 16 |
-| Auth | JWT (access 15min + refresh 7d), bcrypt |
-| IA | Groq — llama-3.3-70b-versatile (migrado do Claude; quota mensal por plano) |
-| Email | Resend — remetente `noreply@nexmintlab.com` (domínio da NexMint Labs; env `EMAIL_FROM`) |
-| Storage | Cloudflare R2 (planejado) |
-| Pagamentos | Stripe + Pagar.me |
+| Auth | JWT (access 15min + refresh 7d), bcrypt, refresh token rotation, Redis blacklist (JTI) |
+| IA | Groq — llama-3.3-70b-versatile (quota mensal por plano) |
+| Email | Resend — `noreply@nexmintlab.com` (domínio verificado) |
+| Storage | Cloudflare R2 + signed URLs (via `R2_SIGNED_URLS=true`) |
+| Pagamentos | Stripe + Pagar.me (ambos funcionais com webhook + dedupe Redis) |
+| Monitoramento | Sentry (frontend + backend) |
 | Monorepo | Turborepo 2 + npm workspaces |
 | CI/CD | GitHub Actions |
 | Infra | Docker Compose (dev), Vercel (web), Railway (api) |
 
 ---
 
-## Backend — 13 Módulos NestJS
+## Backend — 18 Módulos NestJS
 
-| Módulo | Endpoints principais |
-|--------|---------------------|
-| `auth` | POST /auth/register, /login, /refresh |
-| `users` | GET /users/me, /users, POST /users/invite |
-| `organizations` | GET/PATCH /organizations/me |
-| `projects` | CRUD + ?status= ?limit= |
-| `tasks` | CRUD + ?project_id= ?status= ?overdue=true |
+| Módulo | Descrição |
+|--------|-----------|
+| `auth` | POST /auth/register, /login, /refresh, /logout; refresh rotation + Redis blacklist |
+| `users` | GET /users/me, CRUD membros, convite por e-mail, reenvio de convite, upload de avatar (R2) |
+| `organizations` | GET/PATCH /organizations/me, API key que autentica como admin |
+| `projects` | CRUD + filtros ?status= ?limit= |
+| `tasks` | CRUD + filtros + view semanal/calendário + subtarefas (ChecklistItem) |
 | `dashboard` | GET /dashboard/stats (5 métricas via Promise.all) |
-| `finance` | GET /finance/overview + CRUD parcelas |
-| `portal` | GET /portal/:slug — rota pública sem auth |
+| `finance` | Overview + CRUD parcelas (FinancialInstallment) + CRUD lançamentos (FinancialEntry) + export CSV |
+| `portal` | GET /portal/:slug — rota pública; PATCH /portal/:slug/creatives/:id/review |
 | `reports` | GET /reports/pdf (placeholder) |
-| `ai` | POST /ai/summary, /risks, /suggest-tasks → Claude Sonnet 4.6 |
-| `audit` | Trilha de auditoria por tenant |
-| `notifications` | Push + in-app |
-| `subscriptions` | GET + POST /subscriptions/checkout → Stripe + Pagar.me |
+| `ai` | POST /ai/summary, /risks, /suggest-tasks → Groq llama-3.3-70b |
+| `audit` | Trilha de auditoria por tenant (AuditLog) |
+| `notifications` | Push + in-app + página /notifications |
+| `subscriptions` | Stripe + Pagar.me; checkout, webhooks, cancel, billing page; dedupe Redis; 13 testes |
+| `pipeline` | Pipeline de vendas: PipelineStage, Lead, LeadActivity, FollowUp; Kanban de leads |
+| `creatives` | Gestão de criativos por projeto; review via portal |
+| `devspace` | DevResource — repositórios, links e recursos do projeto |
+| `vault` | VaultEntry com criptografia AES-GCM — credenciais e segredos por tenant |
+| `meta-ads` | AdAccount, AdSpend, AdMetric, MetaConnection — dashboard de Meta Ads por cliente |
 
 **Segurança multi-tenant:**
 - Todo endpoint (exceto `/portal/:slug` e `/auth/*`) tem `JwtAuthGuard`
+- API key de org (`org_...`) também autentica via `JwtAuthGuard` (age como admin)
 - `assertBelongsToTenant(id, tenantId)` antes de mutações
 - `ValidationPipe` global com `whitelist: true` + `forbidNonWhitelisted: true`
-- Rate limiting: 100 req/min via `@nestjs/throttler`
-- Swagger em `/api/docs`
+- Rate limiting: 100 req/min geral, 10 req/min em `/auth/refresh`
+- Swagger em `/api/docs` (desabilitado em produção)
 
 ---
 
-## Schema Prisma
+## Schema Prisma — Modelos
 
-**Modelos:** Organization, User, Project, Task, TaskComment, Attachment, ProjectMessage, FinancialInstallment, AiSummary, AuditLog, Notification, Subscription
+Organization, User, Project, Task, TaskComment, **ChecklistItem**, Attachment, ProjectMessage, FinancialInstallment, **FinancialEntry**, **TimeEntry**, AuditLog, AiSummary, Notification, **Creative**, **DevResource**, **VaultEntry**, **KanbanColumn**, Subscription, **AdAccount**, **AdSpend**, **AdMetric**, **MetaConnection**, **PipelineStage**, **Lead**, **LeadActivity**, **FollowUp**
 
 **Enums:**
 - `ProjectStatus`: PLANNING → ACTIVE → PAUSED → COMPLETED → CANCELLED
@@ -127,23 +135,29 @@ taskflow/                 ← diretório local: C:\Users\migue\taskflow
 
 | Rota | Descrição |
 |------|-----------|
-| `/` | Landing page |
+| `/` | Landing page Aurora (GSAP + Lenis, scrollytelling) |
 | `/login` | Formulário com validação Zod |
 | `/register` | Registro com nome da empresa |
+| `/welcome` | Onboarding pós-registro |
 | `/dashboard` | Métricas + grid de projetos + tarefas atrasadas |
 | `/projects` | Grid com busca + NewProjectModal |
-| `/projects/[id]` | Kanban board 5 colunas + DnD Kit |
-| `/tasks` | Lista com filtro por status, prioridade, membro |
-| `/team` | Membros com avatar, role e status |
-| `/finance` | Overview + tabela de parcelas |
+| `/projects/[id]` | Kanban board 5 colunas + DnD Kit + task-detail-sheet |
+| `/tasks` | Lista com filtro colapsável (status, prioridade, membro) + calendário mensal |
+| `/team` | Membros com avatar, role, status e botão reenviar convite |
+| `/finance` | Overview + tabela de parcelas + lançamentos + export CSV |
+| `/pipeline` | Kanban de leads (PipelineStage) com drag-and-drop |
+| `/meta-ads` | Dashboard de Meta Ads por cliente (AdAccount, gráfico diário, CTR, CPL) |
+| `/notifications` | Central de notificações in-app |
+| `/settings` | Editar nome, logo, cor e API key da organização |
+| `/billing` | Planos (Starter R$197 / Professional R$497 / Business R$997) + checkout Stripe real |
+| `/dev-tools` | Docs de integração para devs (API REST, MCP, webhooks, WordPress/n8n) |
 | `/portal/[slug]` | Página pública para o cliente (sem auth) |
 
-**Paleta:** teal `#1ABC9C` (primária) · navy `#1A2332`/`#131b27` (backgrounds)
+**Paleta:** teal `#1ABC9C` (primária) · preto `#0A0A0A`/`#050505` (dark mode backgrounds)
 
-**Kanban (DnD Kit):**
-- Optimistic updates com `onMutate` + rollback automático em erro
-- Drag overlay com `rotate-1 scale-105`
-- `+Adicionar tarefa` por coluna com `initialStatus` correto
+**Task Detail Sheet:** abre ao clicar no card Kanban; contém subtarefas (add/toggle/rename/delete) e comentários (CRUD). Ícone de lápis abre modal de edição.
+
+**Kanban responsivo mobile:** tabs por coluna em telas < 768px.
 
 **Interceptor de refresh token (`lib/api.ts`):**
 - 401 → enfileira requisições em `pendingQueue` enquanto refresh corre
@@ -152,80 +166,77 @@ taskflow/                 ← diretório local: C:\Users\migue\taskflow
 
 ---
 
-## Deploy
+## MCP Server
 
-### Vercel (Web)
-- `vercel.json` na raiz: `{ "framework": "nextjs", "outputDirectory": "apps/web/.next" }`
-- Build command: `npm run build`
-
-### Railway (API)
-- `railway.toml` configurado
-- Start command: `apps/api/dist/apps/api/src/main.js`
-
-### Variáveis de ambiente obrigatórias
-```
-DATABASE_URL, DIRECT_URL       → PostgreSQL
-JWT_SECRET, JWT_REFRESH_SECRET → Auth
-NEXT_PUBLIC_API_URL            → Frontend → API
-ANTHROPIC_API_KEY              → Módulo AI
-```
+Pacote `mintboard-mcp` publicado no npm (v0.1.0, stdio). 14 tools: projetos, tarefas, pipeline, financeiro, resumo IA e ponte Meta Ads. Documentado em `/dev-tools`.
 
 ---
 
-## Git — Commits Recentes (2026-05-29)
+## Integrações Externas (estado real em 2026-06-15)
 
-```
-53c0ddc fix: add root vercel.json with outputDirectory for Next.js monorepo
-74e57fa fix: add framer-motion to web deps, fix transpilePackages, add creatives migration
-736aa4d fix: add extends key to packages/database/turbo.json (Turbo 2 required)
-14f2c4f fix: disable Turbo cache for database build so prisma generate always runs fresh
-c0209be fix: add explicit any annotations to fix TS7006 in Vercel build
-ae64a5a fix: move @types/cookie-parser to dependencies for Vercel production build
-644a04b fix: add prisma generate to database build for Vercel
-2154ff5 design: redesign completo para MintBoard/Stitch — tokens de cor, sidebar adaptativa
-cd06e9e feat: filtros de status, prioridade e membro em todas as abas de tarefas
-967690b deploy: adiciona prisma migrate deploy ao build
+| Integração | Status | Notas |
+|-----------|--------|-------|
+| Stripe | ✅ Funcional | Webhooks, dedupe Redis, 13 testes |
+| Pagar.me | ✅ Funcional | HMAC obrigatória em produção |
+| Groq | ✅ Funcional | llama-3.3-70b-versatile |
+| Resend | ✅ Funcional | Domínio nexmintlab.com verificado |
+| Cloudflare R2 | ✅ Funcional | Signed URLs disponíveis |
+| Socket.io | ✅ Funcional | Backoff exponencial na reconexão |
+| Sentry | ✅ Funcional | Frontend (Next.js) + Backend (NestJS) |
+| Meta Ads | ✅ Funcional | App próprio, Marketing API direta |
+| Anthropic Claude API | ❌ Removida | Migrado para Groq em 2026-06-10 |
+| Google Ads | ❌ Não implementado | Roadmap |
+| Google Calendar | ❌ Não implementado | Roadmap |
+| Slack | ❌ Não implementado | Roadmap |
+
+---
+
+## Deploy
+
+### Vercel (Web)
+```json
+{ "framework": "nextjs", "outputDirectory": "apps/web/.next", "buildCommand": "npm run build", "installCommand": "npm install" }
 ```
 
-**Padrão de trabalho recente:** estabilização do pipeline de deploy no Vercel + Railway.
+### Railway (API)
+- Build: `npm install && prisma generate && prisma migrate deploy && cd apps/api && npm run build`
+- Start: `node apps/api/dist/apps/api/src/main.js`
+- Health check: `GET /health`
+
+### Variáveis de ambiente obrigatórias
+```
+DATABASE_URL, DIRECT_URL            → PostgreSQL
+JWT_SECRET, JWT_REFRESH_SECRET      → Auth
+NEXT_PUBLIC_API_URL                 → Frontend → API
+GROQ_API_KEY                        → Módulo AI (não mais ANTHROPIC_API_KEY)
+STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_*
+PAGARME_SECRET_KEY, PAGARME_WEBHOOK_SECRET, PAGARME_PLAN_*
+RESEND_API_KEY, EMAIL_FROM          → noreply@nexmintlab.com
+R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET
+REDIS_URL                           → blacklist + dedupe webhooks
+SENTRY_DSN (api), NEXT_PUBLIC_SENTRY_DSN (web)
+META_APP_ID, META_APP_SECRET        → Meta Ads
+```
 
 ---
 
 ## O Que Falta Implementar
 
-### Segurança — implementado em 2026-06-09
-- [x] **Refresh token rotation** — hash bcrypt no banco, invalidado a cada uso (`User.refresh_token_hash`)
-- [x] **Redis blacklist** — access tokens revogados imediatamente no logout (`bl:{jti}` no Redis)
-- [x] **JTI em todos os tokens** — base para revogação granular
-- [x] **Swagger desabilitado em produção** — `if (NODE_ENV !== 'production')`
-- [x] **Portal creative review com slug** — `PATCH /portal/:slug/creatives/:id/review` valida ownership
-- [x] **Rate limit em `/auth/refresh`** — 10 req/min
-- [x] **nanoid para slugs de org** — substitui `Date.now()` por 8 chars aleatórios
-- [x] **uploads/ bloqueado em produção** — usar Cloudflare R2 com signed URLs
-
-### Alta prioridade
-- [ ] **Stripe Webhook** — processar `checkout.session.completed`
-- [ ] **Convite de membro** — modal em `/team` + e-mail via Resend + link de aceite
-- [ ] **Página `/settings`** — editar nome, logo e cor da organização
-
 ### Média prioridade
-- [ ] Upload de arquivos (Cloudflare R2)
-- [ ] Comentários em tarefas
-- [ ] Notificações in-app (badge + dropdown)
-- [ ] Socket.io — Kanban em tempo real
 - [ ] Relatório PDF (`@react-pdf/renderer` ou Puppeteer)
+- [ ] Socket.io — Kanban em tempo real (módulo existe, falta integrar no board)
 - [ ] Link do portal copiável na view do projeto
+- [ ] OAuth Google (NextAuth v5)
+- [ ] Pagar.me checkout (fluxo frontend ainda incompleto)
 
 ### Qualidade / Infra
-- [ ] Testes unitários — Jest nos services NestJS
+- [ ] Testes unitários — Jest nos services NestJS (fora de subscriptions)
 - [ ] Testes E2E — Playwright
-- [ ] Pagar.me checkout
-- [ ] Auditoria automática — interceptor NestJS → AuditLog
-- [ ] Dark mode — next-themes
 - [ ] PWA — manifest + service worker
+- [ ] Dark mode consistente — next-themes (parcialmente feito via CSS vars)
 
-### Roadmap / Integrações
-- [ ] OAuth Google (NextAuth v5)
+### Roadmap
+- [ ] Google Ads integração
 - [ ] Slack — notificar canal em mudança de status
 - [ ] Zapier/Make — webhooks de saída
 - [ ] Google Calendar — sincronizar deadlines
@@ -234,13 +245,16 @@ cd06e9e feat: filtros de status, prioridade e membro em todas as abas de tarefas
 
 ## Decisões Técnicas Relevantes
 
+- **IA migrada para Groq** — `ANTHROPIC_API_KEY` não é mais necessária; pode remover do Railway
 - **`turbo.json` do database** — cache desabilitado para `prisma generate` sempre rodar no deploy
 - **`packages/database/turbo.json`** — precisa ter `"extends": ["//"]` (Turbo 2 obrigatório)
-- **`@types/cookie-parser`** — movido para `dependencies` (não devDependencies) por causa do build Vercel
-- **`vercel.json` na raiz** — necessário porque o monorepo não usa `rootDirectory` de projeto específico
+- **`@types/cookie-parser`** — em `dependencies` (não devDependencies) por causa do build Vercel
 - **Portal do cliente** — usa `axios` direto (sem o interceptor autenticado de `api.ts`)
-- **IA** — módulo migrou para Groq (llama-3.3-70b-versatile) com quota mensal por plano; SDK Anthropic não é mais usado (sessão 2026-06-10)
+- **API key de org** — Bearer `org_...` é aceita pelo `JwtAuthGuard` como admin da organização
+- **VaultEntry** — criptografia AES-GCM no service (não apenas no banco)
+- **Webhook dedupe** — `RedisService.acquireOnce` (SET NX, TTL 24h); fail-open sem Redis
+- **Preços flat** — sem limite de usuários: Starter R$197 / Professional R$497 / Business R$997
 
 ---
 
-_Salvo automaticamente por Claude Code em 2026-05-29._
+_Atualizado por Claude Code em 2026-06-15. Baseado em leitura direta do repositório (118 commits)._
