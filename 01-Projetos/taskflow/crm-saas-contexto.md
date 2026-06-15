@@ -16,7 +16,7 @@ tags:
   - vercel
   - railway
 created: 2026-05-29
-updated: 2026-06-02
+updated: 2026-06-10
 github: https://github.com/MiguelRibasBerlese/CRM-SaaS
 ---
 
@@ -70,8 +70,8 @@ taskflow/                 ← diretório local: C:\Users\migue\taskflow
 | ORM | Prisma 5 |
 | Banco | PostgreSQL 16 |
 | Auth | JWT (access 15min + refresh 7d), bcrypt |
-| IA | Anthropic Claude Sonnet 4.6 |
-| Email | Resend |
+| IA | Groq — llama-3.3-70b-versatile (migrado do Claude; quota mensal por plano) |
+| Email | Resend — remetente `noreply@nexmintlab.com` (domínio da NexMint Labs; env `EMAIL_FROM`) |
 | Storage | Cloudflare R2 (planejado) |
 | Pagamentos | Stripe + Pagar.me |
 | Monorepo | Turborepo 2 + npm workspaces |
@@ -239,7 +239,7 @@ cd06e9e feat: filtros de status, prioridade e membro em todas as abas de tarefas
 - **`@types/cookie-parser`** — movido para `dependencies` (não devDependencies) por causa do build Vercel
 - **`vercel.json` na raiz** — necessário porque o monorepo não usa `rootDirectory` de projeto específico
 - **Portal do cliente** — usa `axios` direto (sem o interceptor autenticado de `api.ts`)
-- **IA** — módulo usa Claude Sonnet 4.6 diretamente via Anthropic SDK
+- **IA** — módulo migrou para Groq (llama-3.3-70b-versatile) com quota mensal por plano; SDK Anthropic não é mais usado (sessão 2026-06-10)
 
 ---
 
